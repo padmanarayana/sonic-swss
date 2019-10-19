@@ -68,7 +68,15 @@ bool OrchDaemon::init()
 
     string platform = getenv("platform") ? getenv("platform") : "";
 
-    gSwitchOrch = new SwitchOrch(m_applDb, APP_SWITCH_TABLE_NAME);
+    TableConnector conf_asic_sensors(m_configDb, CFG_ASIC_SENSORS_TABLE_NAME);
+    TableConnector app_switch_table(m_applDb, APP_SWITCH_TABLE_NAME);
+
+    vector<TableConnector> switch_tables = {
+        conf_asic_sensors,
+        app_switch_table
+    };
+
+    gSwitchOrch = new SwitchOrch(m_applDb, switch_tables);
 
     const int portsorch_base_pri = 40;
 
